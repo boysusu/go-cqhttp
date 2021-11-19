@@ -28,7 +28,7 @@ message:
   # 是否强制分片发送消息
   # 分片发送将会带来更快的速度
   # 但是兼容性会有些问题
-  force-fragment: false
+  force-fragment: true
   # 是否将url分片发送
   fix-url: false
   # 下载图片等请求网络代理
@@ -75,7 +75,7 @@ database: # 数据库相关设置
     # 是否启用内置leveldb数据库
     # 启用将会增加10-20MB的内存占用和一定的磁盘空间
     # 关闭将无法使用 撤回 回复 get_msg 等上下文相关功能
-    enable: true
+    enable: false
 
   # 媒体文件缓存， 删除此项则使用缓存文件(旧版行为)
   cache:
@@ -85,7 +85,22 @@ database: # 数据库相关设置
 # 连接服务列表
 servers:
   # 添加方式，同一连接方式可添加多个，具体配置说明请查看文档
-  #- http: # http 通信
+  - http:
+      # 服务端监听地址
+      host: 127.0.0.1
+      # 服务端监听端口
+      port: 5700
+      # 反向HTTP超时时间, 单位秒
+      # 最小值为5，小于5将会忽略本项设置
+      timeout: 5
+      middlewares:
+        <<: *default # 引用默认中间件
+      # 反向HTTP POST地址列表
+      post:
+      #- url: '' # 地址
+      #  secret: ''           # 密钥
+      #- url: 127.0.0.1:5701 # 地址
+      #  secret: ''          # 密钥
   #- ws:   # 正向 Websocket
   #- ws-reverse: # 反向 Websocket
   #- pprof: #性能分析服务器
